@@ -107,7 +107,7 @@ class GlyphsInLabelColor ( NSObject, GlyphsReporterProtocol ):
 				thisColor = Layer.parent.valueForKey_("color")
 			
 			thisColor.set()
-			thisBezierPath = Layer.bezierPath()
+			thisBezierPath = Layer.copyDecomposedLayer().bezierPath()
 			if thisBezierPath:
 				thisBezierPath.fill()
 		except Exception as e:
