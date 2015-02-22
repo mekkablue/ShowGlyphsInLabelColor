@@ -147,11 +147,15 @@ class GlyphsInLabelColor ( NSObject, GlyphsReporterProtocol ):
 		except Exception as e:
 			self.logToConsole( "drawTextAtPoint: %s" % str(e) )
 	
-	def needsExtraMainOutlineDrawingForActiveLayer_( self, Layer ):
-		return False
-	
 	def needsExtraMainOutlineDrawingForInactiveLayer_( self, Layer ):
-		return False
+		try:
+			if Layer.parent.color != NSNotFound:
+				self.drawGlyphInLabelColor( Layer )
+				return False
+			else:
+				return True
+		except Exception as e:
+			return True
 	
 	def getHandleSize( self ):
 		"""
