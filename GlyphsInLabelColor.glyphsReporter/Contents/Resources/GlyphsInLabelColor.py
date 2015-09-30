@@ -96,8 +96,24 @@ class GlyphsInLabelColor ( NSObject, GlyphsReporterProtocol ):
 		except Exception as e:
 			self.logToConsole( "drawForegroundForLayer_: %s" % str(e) )
 	
+	def getLayerWithCorners( self, currentGlyph, currentMaster ):
+		try:
+			myInstance = GSInstance()
+			myInstance.setFont_( currentGlyph.parent )
+			myInstance.weightValue = currentMaster.weightValue
+			myInstance.widthValue = currentMaster.widthValue
+			myInstance.customValue = currentMaster.customValue
+			interpolatedLayer = currentGlyph.decomposedInterpolate_( myInstance )
+			interpolatedLayer.name = "LayerInLabelColor"
+			# interpolatedLayer = currentGlyph.interpolate_decompose_error_( myInstance, True, None)
+			return interpolatedLayer
+		except Exception as e:
+			self.logToConsole( "getLayerWithCorners: %s" % str(e) )
+			
+	
 	def drawGlyphInLabelColor( self, Layer ):
 		try:
+			# Default color:
 			if self.controller:
 				# set the drawing color to black:
 				NSColor.darkGrayColor().set()
@@ -112,8 +128,8 @@ class GlyphsInLabelColor ( NSObject, GlyphsReporterProtocol ):
 					# set the drawing color to black if preview background is white:
 					NSColor.blackColor().set()
 			
+			# find the most appropriate color:
 			thisColor = None
-			
 			try:
 				# Glyphs 2.x:
 				thisColor = Layer.layerColor()
@@ -127,8 +143,18 @@ class GlyphsInLabelColor ( NSObject, GlyphsReporterProtocol ):
 			
 			if thisColor:
 				thisColor.set()
-				
+			
+			# current layer as it is ...
 			layerCopy = Layer.copyDecomposedLayer()
+			
+			# ... but this attempts to also include corner components:
+			currentMaster = Layer.associatedFontMaster()
+			currentGlyph = Layer.parent
+			if currentMaster and currentGlyph:
+				interpolatedLayer = self.getLayerWithCorners( currentGlyph, currentMaster )
+				if interpolatedLayer:
+					layerCopy = interpolatedLayer
+				
 			layerCopy.removeOverlap()
 			thisBezierPath = layerCopy.bezierPath()
 			
