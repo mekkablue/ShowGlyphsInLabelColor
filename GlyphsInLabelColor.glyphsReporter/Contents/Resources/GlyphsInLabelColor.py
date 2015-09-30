@@ -98,16 +98,40 @@ class GlyphsInLabelColor ( NSObject, GlyphsReporterProtocol ):
 	
 	def drawGlyphInLabelColor( self, Layer ):
 		try:
+			if self.controller:
+				# set the drawing color to black:
+				NSColor.darkGrayColor().set()
+
+			# Color for GLYPH IN PREVIEW:	
+			else:
+				# check for background color (can be black or white):
+				if NSUserDefaults.standardUserDefaults().boolForKey_("GSPreview_Black"):
+					# set the drawing color to white if preview background is black:
+					NSColor.whiteColor().set()
+				else:
+					# set the drawing color to black if preview background is white:
+					NSColor.blackColor().set()
+			
+			thisColor = None
+			
 			try:
+				# Glyphs 2.x:
 				thisColor = Layer.layerColor()
 				if not thisColor:
 					raise thisColor # no layerColor set (Glyphs 2)
 			except:
 				# Glyphs 1.x or no layerColor:
-				thisColor = Layer.parent.valueForKey_("color")
+				thisGlyph = Layer.parent
+				if thisGlyph:
+					thisColor = thisGlyph.valueForKey_("color")
 			
-			thisColor.set()
-			thisBezierPath = Layer.copyDecomposedLayer().bezierPath()
+			if thisColor:
+				thisColor.set()
+				
+			layerCopy = Layer.copyDecomposedLayer()
+			layerCopy.removeOverlap()
+			thisBezierPath = layerCopy.bezierPath()
+			
 			if thisBezierPath:
 				thisBezierPath.fill()
 		except Exception as e:
@@ -124,7 +148,13 @@ class GlyphsInLabelColor ( NSObject, GlyphsReporterProtocol ):
 	
 	def drawBackgroundForInactiveLayer_( self, Layer ):
 		"""
-		Whatever you draw here will be displayed behind the paths, but for inactive masters.
+		Whatever you draw here will be displayed behind the paths, but
+		- for inactive glyphs in the EDIT VIEW
+		- and for glyphs in the PREVIEW
+		Please note: If you are using this method, you probably want
+		self.needsExtraMainOutlineDrawingForInactiveLayer_() to return False
+		because otherwise Glyphs will draw the main outline on top of it, and
+		potentially cover up your background drawing.
 		"""
 		try:
 			self.drawGlyphInLabelColor( Layer )
@@ -148,12 +178,16 @@ class GlyphsInLabelColor ( NSObject, GlyphsReporterProtocol ):
 			self.logToConsole( "drawTextAtPoint: %s" % str(e) )
 	
 	def needsExtraMainOutlineDrawingForInactiveLayer_( self, Layer ):
+		"""
+		Decides whether inactive glyphs in Edit View and glyphs in Preview should be drawn
+		by Glyphs (‘the main outline drawing’).
+		Return True (or remove the method) to let Glyphs draw the main outline.
+		Return False to prevent Glyphs from drawing the glyph (the main outline 
+		drawing), which is probably what you want if you are drawing the glyph
+		yourself in self.drawBackgroundForInactiveLayer_().
+		"""
 		try:
-			if Layer.parent.color != NSNotFound:
-				self.drawGlyphInLabelColor( Layer )
-				return False
-			else:
-				return True
+			return False
 		except Exception as e:
 			return True
 	
