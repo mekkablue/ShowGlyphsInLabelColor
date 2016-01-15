@@ -156,13 +156,20 @@ class GlyphsInLabelColor ( NSObject, GlyphsReporterProtocol ):
 					layerCopy = interpolatedLayer
 				
 			layerCopy.removeOverlap()
-			thisBezierPath = layerCopy.bezierPath()
+			thisBezierPath = self.bezierPathComp(layerCopy)
 			
 			if thisBezierPath:
 				thisBezierPath.fill()
 		except Exception as e:
 			self.logToConsole( "drawGlyphInLabelColor: %s" % str(e) )
-			
+
+	def bezierPathComp( self, thisPath ):
+		"""Compatibility method for bezierPath before v2.3."""
+		try:
+			return thisPath.bezierPath() # until v2.2
+		except Exception as e:
+			return thisPath.bezierPath # v2.3+
+
 	def drawBackgroundForLayer_( self, Layer ):
 		"""
 		Whatever you draw here will be displayed BEHIND the paths.
