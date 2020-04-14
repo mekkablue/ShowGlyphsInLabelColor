@@ -1,4 +1,5 @@
 # encoding: utf-8
+from __future__ import division, print_function, unicode_literals
 
 ###########################################################################################################
 #
@@ -16,37 +17,46 @@ from GlyphsApp.plugins import *
 
 class ShowGlyphsInLabelColor(ReporterPlugin):
 
+	@objc.python_method
 	def settings(self):
 		self.menuName = Glyphs.localize({
-			'en': u'Glyphs in their Label Colors', 
-			'de': u'Glyphen in ihrer Etikettenfarbe'
+			'en': 'Glyphs in their Label Colors', 
+			'de': 'Glyphen in ihrer Etikettenfarbe',
+			'fr': 'les glyphes dans leurs couleurs'
+			'es': 'los glifos en sus colores'
 		})
 	
+	@objc.python_method
 	def drawLayerInLabelColor( self, layer ):
 		try:
+			# layer color:
 			color = layer.colorObject
 			if not color:
+				# glyph color
 				color = layer.parent.colorObject
 			if color:
-				color.set()
+				color.colorWithAlphaComponent_(0.67).set()
 				layer.completeBezierPath.fill()
-				return True
-			else:
-				return False
 		except Exception as e:
 			self.logToConsole( "drawLayerInLabelColor: %s\n" % str(e) )
 			import traceback
-			print traceback.format_exc()
-
-	def background(self, layer):
-		if not self.drawLayerInLabelColor( layer ):
-			pass
+			print(traceback.format_exc())
 	
-	def inactiveLayers(self, layer):
-		print self.drawLayerInLabelColor( layer )
+	@objc.python_method
+	def background(self, layer):
+		self.drawLayerInLabelColor( layer )
+	
+	@objc.python_method
+	def inactiveLayerBackground(self, layer):
+		self.drawLayerInLabelColor( layer )
 
 	def needsExtraMainOutlineDrawingForInactiveLayer_(self, layer):
 		if not layer.colorObject and not layer.parent.colorObject:
 			return True
 		else:
 			return False
+
+	@objc.python_method
+	def __file__(self):
+		"""Please leave this method unchanged"""
+		return __file__
