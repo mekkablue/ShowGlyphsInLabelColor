@@ -22,8 +22,8 @@ class ShowGlyphsInLabelColor(ReporterPlugin):
 		self.menuName = Glyphs.localize({
 			'en': 'Glyphs in their Label Colors', 
 			'de': 'Glyphen in ihrer Etikettenfarbe',
-			'fr': 'les glyphes dans leurs couleurs'
-			'es': 'los glifos en sus colores'
+			'fr': 'les glyphes dans leurs couleurs',
+			'es': 'los glifos en sus colores',
 		})
 	
 	@objc.python_method
