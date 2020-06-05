@@ -27,7 +27,7 @@ class ShowGlyphsInLabelColor(ReporterPlugin):
 		})
 	
 	@objc.python_method
-	def drawLayerInLabelColor( self, layer ):
+	def drawLayerInLabelColor( self, layer, alpha=0.67 ):
 		try:
 			# layer color:
 			color = layer.colorObject
@@ -35,7 +35,7 @@ class ShowGlyphsInLabelColor(ReporterPlugin):
 				# glyph color
 				color = layer.parent.colorObject
 			if color:
-				color.colorWithAlphaComponent_(0.67).set()
+				color.colorWithAlphaComponent_(alpha).set()
 				layer.completeBezierPath.fill()
 		except Exception as e:
 			self.logToConsole( "drawLayerInLabelColor: %s\n" % str(e) )
@@ -49,6 +49,10 @@ class ShowGlyphsInLabelColor(ReporterPlugin):
 	@objc.python_method
 	def inactiveLayerBackground(self, layer):
 		self.drawLayerInLabelColor( layer )
+	
+	@objc.python_method
+	def preview(self, layer):
+		self.drawLayerInLabelColor( layer, alpha=1.0 )
 
 	def needsExtraMainOutlineDrawingForInactiveLayer_(self, layer):
 		if not layer.colorObject and not layer.parent.colorObject:
