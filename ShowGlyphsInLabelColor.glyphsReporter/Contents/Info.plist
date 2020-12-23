@@ -12,16 +12,10 @@
 	<string>6.0</string>
 	<key>CFBundleName</key>
 	<string>ShowGlyphsInLabelColor</string>
-	<key>CFBundleVersion</key>
-	<string>11</string>
 	<key>CFBundleShortVersionString</key>
-	<string>3.0.3</string>
-	<key>UpdateFeedURL</key>
-	<string>https://raw.githubusercontent.com/mekkablue/ShowGlyphsInLabelColor/master/ShowGlyphsInLabelColor.glyphsReporter/Contents/Info.plist</string>
-	<key>productPageURL</key>
-	<string>https://github.com/mekkablue/ShowGlyphsInLabelColor</string>
-	<key>productReleaseNotes</key>
-	<string>Updated plugin binary.</string>
+	<string>3.0.4</string>
+	<key>CFBundleVersion</key>
+	<string>12</string>
 	<key>NSHumanReadableCopyright</key>
 	<string>Copyright, Rainer Erich Scheichelbauer, 2017</string>
 	<key>NSPrincipalClass</key>
@@ -30,5 +24,11 @@
 	<array>
 		<string>plugin.py</string>
 	</array>
+	<key>UpdateFeedURL</key>
+	<string>https://raw.githubusercontent.com/mekkablue/ShowGlyphsInLabelColor/master/ShowGlyphsInLabelColor.glyphsReporter/Contents/Info.plist</string>
+	<key>productPageURL</key>
+	<string>https://github.com/mekkablue/ShowGlyphsInLabelColor</string>
+	<key>productReleaseNotes</key>
+	<string>update binary files for Glyphs3</string>
 </dict>
 </plist>
