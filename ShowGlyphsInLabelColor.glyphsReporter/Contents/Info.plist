@@ -15,7 +15,7 @@
 	<key>CFBundleShortVersionString</key>
 	<string>3.0.6</string>
 	<key>CFBundleVersion</key>
-	<string>14</string>
+	<string>15</string>
 	<key>UpdateFeedURL</key>
 	<string>https://raw.githubusercontent.com/mekkablue/ShowGlyphsInLabelColor/master/ShowGlyphsInLabelColor.glyphsReporter/Contents/Info.plist</string>
 	<key>productPageURL</key>
